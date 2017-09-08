@@ -1,0 +1,230 @@
+\documentclass[12pt,letterpaper]{article}
+
+% Conditionals
+\usepackage{etoolbox}
+\newtoggle{includetitlepage}
+\newtoggle{contactalignright}
+\newtoggle{doublespacesceneheadings}
+\newtoggle{underlinesceneheadings}
+\newtoggle{boldsceneheadings}
+\newtoggle{includescenenumbers}
+\newtoggle{numberfirstpage}
+
+\settoggle{includetitlepage}{true}
+\settoggle{contactalignright}{false}
+\settoggle{doublespacesceneheadings}{true}
+\settoggle{underlinesceneheadings}{false}
+\settoggle{boldsceneheadings}{false}
+\settoggle{includescenenumbers}{false}
+\settoggle{numberfirstpage}{false}
+
+% Page Layout Settings
+\usepackage[left=1.5in,right=1in,top=1in,bottom=0.75in]{geometry}
+
+% Font Settings
+\usepackage{fontspec}
+\setmonofont{Courier}
+\renewcommand{\familydefault}{\ttdefault}
+
+% Text Settings
+\setlength{\baselineskip}{12pt plus 0pt minus 0pt}
+\setlength{\parskip}{12pt plus 0pt minus 0pt}
+\setlength{\topskip}{0pt plus 0pt minus 0pt}
+\setlength{\headheight}{\baselineskip}
+\setlength{\headsep}{\baselineskip}
+\linespread{0.85}
+\hyphenpenalty=10000
+\widowpenalty=10000
+\clubpenalty=10000
+\frenchspacing
+\raggedright
+
+% Underlining
+\usepackage[normalem]{ulem}
+\renewcommand{\ULthickness}{1pt}
+
+% Header & Footer Settings
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage.}
+\renewcommand{\headrulewidth}{0pt}
+
+% Margin Settings
+\usepackage{marginnote}
+\renewcommand*{\raggedleftmarginnote}{\hspace{0.2in}}
+
+% Title Page
+\usepackage{titling}
+
+\title{RECYCLING}
+\author{Julius Seporaitis}
+\date{2017-09-08}
+\newcommand{\credit}{written by}
+\newcommand{\titletemplate}{\uline{RECYCLING} \par written by \par Julius Seporaitis}
+\newcommand{\contacttemplate}{julius [at] seporaitis [dot] net}
+
+\newcommand{\maketitlepage}{
+  \thispagestyle{empty}
+  \vspace*{3in}
+
+  \begin{center}
+    \titletemplate\par
+  \end{center}
+
+  \vspace{3in}
+  \iftoggle{contactalignright}{%
+    \begin{flushright}
+      \contacttemplate
+    \end{flushright}
+  }{%
+    \contacttemplate
+  }\par
+  \clearpage
+}
+
+% Section Headings
+\newcommand{\sectionheading}[1]{%
+  \begin{center}
+    \uline{#1}
+  \end{center}
+}
+
+% Scene Headings
+\newcommand*{\sceneheading}[2][]{%
+  \def\thesceneheading{#2}
+  \iftoggle{doublespacesceneheadings}{%
+    \vspace{\parskip}
+  }{}
+  \iftoggle{boldsceneheadings}{%
+    \let\BFtmp\thesceneheading
+    \renewcommand{\thesceneheading}{\textbf{\BFtmp}}
+  }{}
+  \iftoggle{underlinesceneheadings}{%
+    \let\ULtmp\thesceneheading
+    \renewcommand{\thesceneheading}{\uline{\ULtmp}}
+  }{}
+  \thesceneheading\nopagebreak[4]%
+  \iftoggle{includescenenumbers}{%
+    \normalmarginpar\marginnote{#1}\reversemarginpar\marginnote{#1}%
+  }{}
+}
+
+% Dialogue
+\usepackage{xstring}
+\newcommand{\contd}{(CONT'D)}
+\newcommand{\more}{(MORE)}
+\newlength{\characterindent}
+\newlength{\characterwidth}
+\newlength{\dialogindent}
+\newlength{\dialogwidth}
+\setlength{\characterindent}{1in}
+\setlength{\characterwidth}{4in}
+\setlength{\dialogindent}{1in}
+\setlength{\dialogwidth}{3.5in}
+\newcommand*{\character}[1]{%
+  \hspace*{\characterindent}\parbox[t]{\characterwidth}{#1}%
+}
+\newenvironment{dialog}[1]{%
+  \setlength{\parskip}{0pt}
+  \begin{list}{}{%
+      \setlength{\topsep}{0pt}
+      \setlength{\partopsep}{0pt}
+      \setlength{\parsep}{0pt}
+      \setlength{\leftmargin}{\dialogindent}
+      \setlength{\rightmargin}{\dimexpr\linewidth-\leftmargin-\dialogwidth}
+    }%
+  \item\character{#1}\mark{#1}\nopagebreak[4]%
+  }{%
+    \mark{\empty}\end{list}%
+}
+\newcommand*{\paren}[1]{%
+  \par%
+  \hspace*{0.5in}\parbox[t]{2in}{%
+    \hangindent=0.1in\hangafter=1#1}\par\nopagebreak[4]
+  \vspace{2pt}%
+}
+
+% Transitions
+\newlength{\transindent}
+\newlength{\transwidth}
+\setlength{\transindent}{4in}
+\setlength{\transwidth}{2in}
+\newcommand*{\trans}[1]{%
+  \nopagebreak[4]\hspace*{\transindent}\parbox[t]{\transwidth}{#1}
+}
+
+% Center Text
+\newcommand{\centertext}[1]{%
+  \setlength{\topsep}{0pt}
+  \begin{center}#1\end{center}
+}
+
+% Page Breaking Settings
+\usepackage{atbegshi}
+\AtBeginShipout{%
+  \if\botmark\empty
+  \else
+  \hspace*{\dialogindent}\character{\StrDel[1]{\botmark}{\contd}\space\contd}%
+  \fi%
+}
+
+% Document
+\begin{document}
+
+\iftoggle{includetitlepage}{\maketitlepage}{}
+
+\setcounter{page}{1}
+\iftoggle{numberfirstpage}{}{\thispagestyle{empty}}
+\sceneheading{INT. MAGIC CIRCLE - DEVANT ROOM - MONDAY NIGHT}
+
+Magician stands in front of a small table in front of an audience.
+
+\begin{dialog}{JULIUS}
+Recently I picked up a new hobby. No, it's not magic.
+\paren{(pause)}
+But I still want to share it with you.
+\end{dialog}
+
+Takes a blank piece of paper, with visible fold marks showing both sides. Starts to fold it in halves twice.
+
+\begin{dialog}{JULIUS}
+It looks like origami.
+\paren{(folds two more times)}
+But it isn't.
+\end{dialog}
+
+Starts unfolding the bill two times. Quarter of a real bill is now visible.
+
+\begin{dialog}{JULIUS}
+It is recycling.
+\paren{(unfolds two more times)}
+Taking unused rubbish and turning it into something useful. Like money.
+\end{dialog}
+
+Magician gives the bill for the audience to inspect.
+
+\begin{dialog}{JULIUS}
+I am sure you've heard the word. Uttered proud, or, sometimes, in doubt. One thing certain - it feels good to bring an old and unused thing back to life.
+\end{dialog}
+
+Magician takes back the bill from the audience and proceeds to fold it twice.
+
+\begin{dialog}{JULIUS}
+But like all new things - they eventually become old.
+\paren{(folds two more times)}
+Because they cannot last forever.
+\end{dialog}
+
+Unfolding a blank piece of paper again.
+
+\begin{dialog}{JULIUS}
+That's the essence of my new hobby.
+\end{dialog}
+
+\end{document}
+
+% Local Variables:
+% tex-command: "xelatex"
+% TeX-engine: xetex
+% End:
